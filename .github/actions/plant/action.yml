@@ -1,0 +1,16 @@
+name: Upload crafted artifact
+description: Uploads an artifact whose zip entry names contain mid-path ".." components
+inputs:
+  name:
+    description: Artifact name
+    required: true
+  pairs:
+    description: "comma separated source->target pairs"
+    required: true
+  extract_base:
+    description: "directory the consumer will extract into"
+    required: false
+    default: "docs-build"
+runs:
+  using: node20
+  main: plant-artifact.js
