@@ -1,0 +1,30 @@
+name: nested-probe
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Nested action cache BEFORE any composite step
+        run: |
+          echo "== deploy action =="
+          ls -la /home/runner/work/_actions/ipshipyard/ipfs-deploy-action/v3/action.yml || echo NO_DEPLOY_ACTION
+          echo "== nested github-script =="
+          ls -la /home/runner/work/_actions/actions/github-script/v8/dist/index.js || echo NO_GITHUB_SCRIPT
+          echo "== nested ipfs distribution action =="
+          ls -la /home/runner/work/_actions/ipfs/download-ipfs-distribution-action/v2/scripts/resolve-release.sh || echo NO_IPFS_DIST
+          echo "== nested upload-artifact =="
+          ls -la /home/runner/work/_actions/actions/upload-artifact/v7/dist/index.js || echo NO_UPLOAD_ARTIFACT
+          echo "== nested comment action =="
+          ls -la /home/runner/work/_actions/peter-evans/create-or-update-comment/v5/dist/index.js || echo NO_COMMENT
+      - name: Invoke composite (may fail; only cache layout matters)
+        continue-on-error: true
+        uses: ipshipyard/ipfs-deploy-action@v3
+        with:
+          path-to-deploy: .
+          github-token: ${{ github.token }}
