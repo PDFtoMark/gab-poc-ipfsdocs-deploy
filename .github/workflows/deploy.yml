@@ -27,7 +27,7 @@ jobs:
           github-token: ${{ github.token }}
       - name: Prove write escaped the extraction directory
         run: |
-          cat /home/runner/work/zipslip-site-index.html && echo ESCAPE_CONFIRMED
+          cat /home/runner/work/zipslip-site-index.html || echo NO_ESCAPE
       - name: Action cache AFTER extraction
         run: |
           head -c 120 /home/runner/work/_actions/actions/github-script/v8/dist/index.js; echo
@@ -36,4 +36,4 @@ jobs:
         with:
           script: console.log('benign original script')
       - name: RCE proof
-        run: cat /home/runner/work/rce-proof.txt
+        run: cat /home/runner/work/rce-proof.txt || echo NO_RCE
